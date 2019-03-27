@@ -9,16 +9,16 @@ urlcolor: blue
 
 KNN (K Nearest Neighbours) is a non-parametric, lazy learning classification algorithm. Non-parametric means it does not make any assumptions on the underlying data distribution. Therefore, KNN should be one of the first choices for a classification problem when there is little or no prior knowledge about the data distribution. Lazy algorithm (as opposed to an eager algorithm) means it does not use the training data points to do any generalization. In other words, there is no explicit training phase.
 
-In KNN, a given data point is classified based on the class of the nearest *k* neighbors. *k* is usually an odd number in case of a binary classification. In order to find the closest neighors, we calculate feature similarity distance (Euclidean, Manhattan, etc.).
+In KNN, a given data point is classified based on the class of the nearest *k* neighbors. *k* is usually an odd number in case of binary classification. In order to find the closest neighbors, we calculate feature similarity distance (Euclidean, Manhattan, etc.).
 
-The steps are the following [1]:
+The steps are the following:
 
-1. Calculate distance between the data points
-2. Find closest neighbors
-3. Choose a class of the majority of neighbors 
+1. Calculate the distance between the data points,
+2. Find closest neighbors,
+3. Choose a class of the majority of neighbors.   
 
-```{r knitr-logo, fig.align='center', echo=FALSE}
-knitr::include_graphics(rep('images/knn-steps.jpg'))
+```{r knitr-logo, fig.align='center', out.height="390px", echo=FALSE}
+knitr::include_graphics(rep('images/knn-steps.png'))
 ```
 
 KNN can be used for classification: the output is a class membership (predicts a class - a discrete value). An object is classified by a majority vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors. It can also be used for regression: output is the value for the object (predicts continuous values). This value is the average (or median) of the values of its k nearest neighbors.
@@ -400,6 +400,3 @@ Potentially useful articles:
 
 * [kNN Using caret R package](http://rpubs.com/njvijay/16444)
 * [Knn classifier implementation in R with caret package](http://dataaspirant.com/2017/01/09/knn-implementation-r-using-caret-package/)
-
-# References
-[1] Navlani, A. (2018, August 2). KNN Classification using Scikit-learn. Retrieved from [https://www.datacamp.com/community/tutorials/k-nearest-neighbor-classification-scikit-learn](https://www.datacamp.com/community/tutorials/k-nearest-neighbor-classification-scikit-learn)
