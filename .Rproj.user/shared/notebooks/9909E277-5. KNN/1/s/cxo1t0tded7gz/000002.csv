@@ -1,0 +1,16 @@
+"0","# print several predictions
+head(knn.pred)
+"
+"1","[1]"
+"1"," Yes"
+"1"," No "
+"1"," No "
+"1"," No "
+"1"," Yes"
+"1"," No "
+"1","
+"
+"1","Levels: "
+"1","No Yes"
+"1","
+"

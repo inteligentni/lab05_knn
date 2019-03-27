@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1553687813132.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4100507124",
+    "id" : "8AB3089C",
+    "lastKnownWriteTime" : 1553688998,
+    "last_content_update" : 1553688998620,
+    "path" : "~/Documents/FON/Nastava/Inteligentni sistemi/Nastava/lab05_knn/script-start.R",
+    "project_path" : "script-start.R",
+    "properties" : {
+        "cursorPosition" : "163,0",
+        "scrollLine" : "136",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

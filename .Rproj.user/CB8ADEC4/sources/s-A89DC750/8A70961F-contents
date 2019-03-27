@@ -1,0 +1,426 @@
+---
+title: "Intro to R - Part I"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+# Install RStudio
+
+First, install the R framework. Go to the [CRAN website](https://cran.rstudio.com/) and in the section *Download and Install R* choose a distribution for your operating system. 
+
+In order to install the RStudio, go to the [download page of the RStudio website](https://www.rstudio.com/products/rstudio/download/). Download *Installers for Supported Platforms*, choose an installer for your operating system. Run the downloaded installer and complete the installation process.
+
+# Vectors
+
+A datum occurring by itself in an expression is taken as a vector of length one. Following are the most used classes of vectors.
+
+## Numeric
+```{r}
+x <- 41.5
+x
+print(class(x))
+```
+
+## Integer
+```{r}
+x <- 5L
+x
+print(class(x))
+```
+
+## Character
+```{r}
+x <- "Hello"
+x
+print(class(x))
+```
+
+## Logical (true/false)
+```{r}
+x <- TRUE
+x
+print(class(x))
+```
+
+## Creating vector with more elements
+When you want to create a vector with more than one element, use the *c()* (short for concatenate) function:
+```{r}
+v <- c(1.5, 5, 3)
+v
+```
+
+## Vector arithmetics
+
+An arithmetic operation on a vector results in a vector containing values of that operation applied to each element of the vector. 
+
+```{r}
+# (+, -, *, /, ^)
+v + 1
+-v
+2*v + 2
+v/2
+v^2
+```
+
+Common arithmetic functions are available: *log*, *exp*, *sin*, *cos*, *tan*, *sqrt*, ...
+
+*max* and *min* select the largest and smallest elements of a vector, respectively. *range* is a function that returns a vector containing the minimum and maximum of all the given arguments, namely *c(min(v), max(v))*. The function *length(v)* returns the number of elements in a vector, while the *sum(v)* gives the total of the elements in a vector, and *prod(v)* their product [2].
+
+```{r}
+v1 <- c(1, 2, 3, 4, 5)
+
+# get the max value
+max(v1)
+
+# get the min value
+min(v1)
+
+# get the range of values
+range(v1)
+
+# calculate the sum of all elements
+sum(v1)
+
+# calculate the product of all elements
+prod(v1)
+```
+
+## Generating regular sequences
+
+For regularly spaced sequences involving integers, it is simplest to use the colon (:) operator. For generating sequences with numeric values, the *seq* should be used.
+
+```{r}
+# generate a sequence from 1 to 10
+1:10
+
+# generate a sequence from 10 to 1
+10:1
+
+# generate a sequence from 3.2 to 4.7, with a step 0.2
+seq(3.2, 4.7, by = 0.2)
+```
+
+## Factor values
+
+Factors are used to represent categorical variables (variables with a limited number of different values). Factors are stored as a vector of integer values with a corresponding set of character values to use when the factor is displayed.
+
+```{r}
+# create a vector and convert to factor
+v2 <- c("cold", "mild", "mild", "hot", "cold")
+temp <- factor(v2)
+
+# print all levels 
+levels(temp)
+
+# print the summary
+summary(temp)
+```
+
+## Missing values
+
+When an element or a value is “not available” or is a “missing value” in the statistical sense, a place within a vector may be reserved for it by assigning it with the special value *NA*. The function *is.na(v)* gives a logical vector of the same size as the vector with value TRUE if and only if the corresponding element in the vector is *NA*. [2].
+
+```{r}
+v3 <- c(1, NA, 3, 4, NA)
+
+# check which values are NAs
+is.na(v3)
+```
+
+The second kind of *missing* values which are produced by numerical computation, the so-called *Not a Number* (NaN) values [2].
+
+```{r}
+# NaN missing value
+0/0
+```
+
+*is.na(xx)* is TRUE both for NA and NaN values. *is.nan(xx)* is only TRUE for NaNs.
+
+# Data frame
+
+Data frames are matrix-like structures, where the columns can be of different types. It consists of a list of vectors of equal length. It is used for storing data tables.
+
+```{r}
+# create a data frame
+data1 <- data.frame(
+  days = c("Mon", "Tue", "Wen", "Thu", "Fri"), 
+  temp = c(25, 28, 30, 29, 34))
+data1
+
+# create a data frame from existing vectors
+data2 <- data.frame(v1, v2, v3)
+data2
+```
+
+## Task 1
+
+Create a dataframe called *co2.emissions* containing two columns: *years* (2000, 2002, 2004, 2006, 2008, 2010) and *emission* (2.7, 2.9, 4, 4.9, 5.3, 6.2).
+
+Answer:
+```{r}
+co2.emissions <- data.frame(
+  year = c(2000, 2002, 2004, 2006, 2008, 2010),
+  emission = c(2.7, 2.9, 4, 4.9, 5.3, 6.2)
+)
+co2.emissions
+```
+
+## Loading data frame from a file
+
+Data can be loaded from a file. The most used file formats are CSV (Comma Separated Values) and TSV (Tab Separated Values). In order to read a CSV file *data/beatles_v1.csv*, we can use the *read.csv* function. By setting the argument *stringsAsFactors* to FALSE, strings will not be converted to factors (which is the default setting).
+
+### read.csv
+
+```{r}
+# reading a data frame from the CSV file
+beatles <- read.csv("data/beatles_v1.csv", stringsAsFactors = FALSE)
+beatles
+```
+
+## Inspecting data frame
+
+```{r}
+# print the number of rows
+nrow(beatles)
+```
+```{r}
+# print the number of columns
+ncol(beatles)
+```
+
+Produce a summary of data.
+
+```{r}
+# summary function
+summary(beatles)
+```
+
+An alternative to *summary* (to an extent), the function *str* can also be used to inspect the data and compactly display the internal structure of a data frame.
+
+```{r}
+# str function
+str(beatles)
+```
+
+The *head* and *tail* functions print first and last several items, respectively.
+
+```{r}
+# get first several rows
+head(beatles)
+
+# get last several rows
+tail(beatles)
+```
+
+*names()* function prints column names. *colnames* can also be used as it works the same on data frames (but not on other data types!).
+
+```{r}
+# get column names
+names(beatles)
+```
+
+We can similarly change column names.
+
+```{r}
+# make a copy of the original data frame
+beatles1 <- beatles
+
+# update column names
+names(beatles1) <- c("song_name", "release_year", "duration")
+beatles1
+```
+
+## Removing columns
+
+```{r}
+# remove column duration
+beatles1$duration <- NULL
+beatles1
+```
+
+## Subsetting
+
+Print a specific element from a data frame. Indexes start from 1.
+
+```{r}
+# get an element from the row 3, column 1 
+song <- beatles[3, 1]
+song
+```
+
+Retrieve a specific row or several rows by index.
+
+```{r}
+# get the third row
+beatles.subset <- beatles[3,]
+beatles.subset
+
+# get rows at positions from 3 to 6 
+beatles.subset1 <- beatles[3:5,]
+beatles.subset1
+
+# get rows at positions 3 and 6 
+beatles.subset2 <- beatles[c(3,6),]
+beatles.subset2
+```
+
+Retrieve a specific column by index or by name.
+
+```{r}
+# get the second column
+years <- beatles[,2]
+years
+
+# get the Year column
+years <- beatles$Year
+years
+```
+
+Lastly, we can retrieve rows with a logical index vector.
+
+```{r}
+# retrieve all songs released before year 1965
+songsBefore1965 <- beatles[beatles$Year < 1965,]
+songsBefore1965
+
+# retrieve all songs released before year 1965 with duration lower than 150 seconds
+shortSongsBefore1965 <- beatles[beatles$Year < 1965 & beatles$Duration < 150,]
+shortSongsBefore1965
+```
+
+NOTE: Logical operators & and && both perform logical AND operation. But the shorter form performs elementwise comparisons in much the same way as arithmetic operators (it performs logical AND on all elements of both vectors). The longer form evaluates left to right examining only the first element of each vector. The similar difference is between the | and || operators.
+
+## Task 2
+
+Print a number of songs from 1963 that last more than 2 minutes (120 seconds).
+
+Answer:
+```{r}
+nrow(beatles[beatles$Year == 1965 & beatles$Duration > 120,])
+```
+
+# Plotting
+
+The most basic function to create a plot is the *plot(x, y)*, where x and y are numeric vectors denoting the x- and y-axes.
+
+```{r}
+# render a basic plot for the given vectors 
+plot(c(2, 8, 5), c(25, 10, 30))
+```
+
+For more advanced plots, [ggplot2](https://ggplot2.tidyverse.org/) library is recommended. *ggplot* function works with data frames and not individual vectors.
+
+When using the ggplot2 for the first time on a specific machine, it needs to be installed, i.e. appropriate packages need to be downloaded from the online repository. After that, the library should be imported (included) with the *library* function.
+
+```{r}
+# include ggplot2 library
+#install.packages("ggplot2")
+library(ggplot2)
+```
+
+Information that is a part of the data frame has to be specified inside the *aes()* (short for aesthetics) function that specifies x- and y-axes.
+
+```{r}
+# render a plot for the given data frame
+ggplot(beatles, aes(x=Year, y=Duration))
+```
+
+The blank plot is drawn. Even though the x and y are specified, there are no points or lines in it. This is because, *ggplot* doesn’t assume which plot we want, a scatterplot or a line chart. We have only told the *ggplot* what dataset to use and what columns should be used for x- and y-axis. We haven’t explicitly asked it to draw any points. Plots are drawn by adding layers to the basic plot generated by the *ggplot* function. More specifically, in order to generate a scatter plot, we use the *geom_point()* layer.
+
+```{r}
+# render a plot for the given data frame with points
+ggplot(beatles, aes(x=Year, y=Duration)) + geom_point()
+```
+
+Similarly, we can plot a bar chart by adding a *geom_col()* layer.
+
+```{r}
+# render a bar chart
+ggplot(beatles, aes(x=Year, y=Duration)) + 
+  geom_col()
+```
+
+In the previous bar chart, we can observe that the x-axis has all values from 1961 to 1968, which is the value interval of the *Year* attribute. These include the years 1962 and 1966 with no songs. If we want to omit these two values, we can convert the *Year* variable into a factor, and now the *Year* variable will have only the following values: 1961, 1963, 1964, 1965, 1967, and 1968. Only these values will be plotted.  
+
+```{r}
+# convert the Year variable to factor
+beatles$Year <- factor(beatles$Year)
+
+# render a bar chart
+ggplot(beatles, aes(x=Year, y=Duration)) + 
+  geom_col()
+```
+
+The chart can be further enhanced by adding a custom x- and y-axis labels, and a chart title. The aesthetic *fill* parameter will take different colouring scales by setting the *fill* to be equal to a factor variable.
+
+```{r}
+# render a bar chart with custom title and axes labels  
+ggplot(beatles, aes(x=Year, y=Duration, fill = Year)) + 
+  geom_col() +
+  xlab("Song release years") + ylab("Song duration") +
+  ggtitle("Duration of songs throughout the years")
+```
+
+*geom_bar()* makes the height of the bar proportional to the number of cases in each group, i.e. it makes a bar chart of counts. In this case, we provide only one variable for the x-axis.
+
+```{r}
+# render a bar chart where the y-axis displays number of cases for each value on the x-axis
+ggplot(beatles, aes(x=Year, fill=Year)) + 
+  geom_bar() +
+  xlab("Song release years") + ylab("Number of songs") +
+  ggtitle("Number of songs throughout the years")
+```
+
+A line chart can be added by adding the *geom_line* layer. *geom_line()* tries to connect data points that belong to the same group. Different levels of a factor variable belong to different groups. By specifying *group=1* we indicate we want a single line connecting all the points.
+
+```{r}
+# render a line chart for the first five songs with specific line and ponts properties
+ggplot(beatles[1:5,], aes(x=Year, y=Duration, group = 1)) +
+  geom_line(colour = "blue", linetype = "dotted", size = 2) + 
+  geom_point(colour="green", size = 4, shape = 22, fill = "yellow") +
+  xlab("Song release years") + ylab("Song duration") +
+  ggtitle("Duration of songs throughout the years")
+```
+
+## Task 3
+
+Create a line chart from a dataset *co2.emissions* (created in Task 1) with the x-axis representing the years, and the y-axis representing the values of CO2 emissions.
+
+Chart title should be "China CO2 Emissions" and y-axis should have a label "CO2 Emissions".
+
+Answer:
+```{r}
+ggplot(co2.emissions, aes(x = year, y = emission, group = 1)) +
+  geom_line()  +
+  ggtitle("China CO2 Emissions") + 
+  ylab("CO2 Emissions")
+```
+
+
+# Homework - Complete interactive R tutorials with Swirl
+
+[Swirl](http://swirlstats.com/) is an interactive R tutorial that teaches you R from the R console. All you need to do is install Swirl package for R and issue a *swirl* command which will start the tutorial.
+
+```{r}
+#install.packages("swirl")
+library("swirl")
+#swirl()
+```
+
+Once a Swirl session is started, you will be prompted with an option to install a Swirl course. For our course, you need to install the *R Programming: The basics of programming in R* Swirl course and go through the following tutorials:
+
+1. Basic Building Blocks
+2. Workspace and Files
+3. Sequences of Numbers
+4. Vectors
+5. Missing Values
+6. Subsetting Vectors
+7. Matrices and Data Frames
+8. Logic
+9. Functions
+12. Looking at Data
+
+# References
+[1] https://www.tutorialspoint.com/r/r_data_types.htm
+[2] An Introduction to R, https://cran.r-project.org/doc/manuals/R-intro.pdf
