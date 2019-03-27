@@ -1,9 +1,0 @@
-"0","# load the caret package
-library(caret)
-"
-"2","Loading required package: lattice
-"
-"2","Loading required package: ggplot2
-"
-"2","Need help? Try Stackoverflow: https://stackoverflow.com/tags/ggplot2.
-"

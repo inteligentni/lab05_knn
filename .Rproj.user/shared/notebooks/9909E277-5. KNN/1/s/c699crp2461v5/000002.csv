@@ -1,9 +1,0 @@
-"0","# print the levels of the ShelveLoc variable
-levels(Carseats$ShelveLoc)
-"
-"1","[1]"
-"1"," ""Bad""   "
-"1"," ""Good""  "
-"1"," ""Medium"""
-"1","
-"
