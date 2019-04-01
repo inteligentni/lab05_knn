@@ -34,7 +34,7 @@ library(ISLR)
 str(Carseats)
 ```
 
-As we did before, we will introduce a categorical (factor) variable *HighSales* to be used as the outcome variable (variable defining the class for each observation). If a sale is greater than the 3rd quartile (9.32), it qualifies as a high sale:
+As we did before, we will introduce a categorical (factor) variable *HighSales* to be used as the outcome variable (variable defining the class for each observation). If a sale is greater than the 3rd quartile (9.32), it qualifies as a high sale.
 
 ```{r}
 # calculate 3rd quartile
@@ -123,7 +123,7 @@ We will rescale our numerical variables by standardizing them (typical approach)
 We will use *Shapiro-Wilk test* to check for normality. The *null hypothesis* of this test is that a sample comes from a normally distributed population; if the test is not significant (p>0.05), we can assume that the null hypothesis holds.
 
 ```{r}
-# apply the test to each numerical column (variable)
+# apply the Shapiro-Wilk test to each numerical column (variable)
 apply(X = Carseats[,numeric.vars], 
       MARGIN = 2, 
       FUN = shapiro.test)
