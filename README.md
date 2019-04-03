@@ -1,4 +1,4 @@
-# K Nearest Neighbours (KNN)Stabla odlučivanja
+# K Nearest Neighbours (KNN)
 
 Ovaj repozitorijum sadrži materijale za čas vežbi na temu *K Nearest Neighbours (KNN)* u okviru predmeta *Inteligentni sistemi*.
 

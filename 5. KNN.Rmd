@@ -25,7 +25,8 @@ KNN can be used for classification: the output is a class membership (predicts a
 
 # Load and prepare data set
 
-We will use the same data set (*Carseats*) as in the previous Lab. 
+We will use the same data set (*Carseats*) as in the previous Lab.
+
 ```{r}
 # load ISLR package
 library(ISLR)
@@ -268,7 +269,7 @@ As the knn() function description indicates, we need to provide the function wit
 * a number of neighbors to consider.
 
 ```{r}
-# createa a knn model with k=5
+# create a knn model with k=5
 knn.pred <- knn(train = train.data[,-11], 
                 test = test.data[,-11],
                 cl = train.data$HighSales,
