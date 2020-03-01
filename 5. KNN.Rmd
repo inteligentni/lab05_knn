@@ -1,27 +1,31 @@
 ---
 title: "K Nearest Neighbours (KNN)"
 output:
+  word_document: default
   pdf_document: default
 urlcolor: blue
 ---
 
-# Short Intro
+# Short Intro to KNN
 
-KNN (K Nearest Neighbours) is a non-parametric, lazy learning classification algorithm. Non-parametric means it does not make any assumptions on the underlying data distribution. Therefore, KNN should be one of the first choices for a classification problem when there is little or no prior knowledge about the data distribution. Lazy algorithm (as opposed to an eager algorithm) means it does not use the training data points to do any generalization. In other words, there is no explicit training phase.
+KNN (K Nearest Neighbours) is a non-parametric, lazy learning algorithm. Non-parametric means it does not make any assumptions on the underlying data distribution. Therefore, KNN should be one of the first choices for a prediction (classification or regression) problem when there is little or no prior knowledge about the data distribution. Lazy algorithm (as opposed to an eager algorithm) means it does not use the training data points (observations) to do any generalization. In other words, there is no explicit training phase.
 
-In KNN, a given data point is classified based on the class of the nearest *k* neighbors. *k* is usually an odd number in case of binary classification. In order to find the closest neighbors, we calculate feature similarity distance (Euclidean, Manhattan, etc.).
+In KNN, the value of the outcome (response) variable for a given observation is determined based on the outcome values of the nearest *k* neighbors. In order to find the closest neighbors, we calculate either similarity or distance (Euclidean, Manhattan, etc.) between pairs of observations, where each observation is represented as a vector of its feature (attribute) values.
+
+When KNN is used for classification, a new observation is classified by taking a majority vote of its nearest neighbors. In other words, the observation is assigned to the class that is the most common among its k nearest neighbors. KNN can also be used for regression. In that case, the outcome, that is, the predicted continuous value, is calculated as the average (mean or median) of the outcome values of its k nearest neighbors.
 
 The steps are the following:
 
-1. Calculate the distance between the data points,
-2. Find closest neighbors,
-3. Choose a class of the majority of neighbors.   
+1. Calculate the distance between a new observation (the one for which a prediction is to be made) and each observation from the training set,
+2. For the new observation, find *k* closest observations in the training set (= k nearest neighbors),
+3. In case of classification, assign label (class) to the new observation based on the majority class of its nearest neighbors; in case of regression, compute the predicted outcome value as the average value of the outcome variable of the nearest neighbors.   
+
+The following figures illustrate the classification steps.
 
 ```{r knitr-logo, fig.align='center', out.height="390px", echo=FALSE}
 knitr::include_graphics(rep('images/knn-steps.png'))
 ```
 
-KNN can be used for classification: the output is a class membership (predicts a class - a discrete value). An object is classified by a majority vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors. It can also be used for regression: output is the value for the object (predicts continuous values). This value is the average (or median) of the values of its k nearest neighbors.
 
 # Load and prepare data set
 
@@ -35,7 +39,7 @@ library(ISLR)
 str(Carseats)
 ```
 
-As we did before, we will introduce a categorical (factor) variable *HighSales* to be used as the outcome variable (variable defining the class for each observation). If a sale is greater than the 3rd quartile (9.32), it qualifies as a high sale.
+As we did before, we will introduce a categorical (factor) variable *HighSales* to be used as the outcome variable (variable defining the class for each observation). If a sale is greater than the 3rd quartile, it qualifies as a high sale.
 
 ```{r}
 # calculate 3rd quartile
@@ -50,7 +54,7 @@ Carseats$HighSales <- ifelse(test = Carseats$Sales > sales.3Q,
 Carseats$HighSales <- as.factor(Carseats$HighSales)
 ```
 
-We'll remove the *Sales* variable, as we do not need it anymore.
+We'll remove the *Sales* variable - since it was used for the creation of the outcome variable, it should not be used for prediction.
 
 ```{r}
 # remove the Sales variable
@@ -59,9 +63,9 @@ Carseats <- Carseats[,-1]
 
 # Standardize numerical attributes
 
-Recall that the *kNN* algorithm primarily works with numerical data. So, if we want to use categorical and/or binary variables, we have to transform them into numerical variables.
+Recall that the kNN algorithm works with numerical data. So, if we want to use categorical and/or binary variables, we have to transform them into numerical variables. Note: this transformation should be done for categorical variables *if and only if* it makes sense to represent a categorical variable as a numerical value. For example, transforming race or ethnicity to a numerical variable does not make sense (what would it mean to add or subtract Asian from Caucasian race?), and thus such variables, if present in the dataset, should *not* be used for kNN. 
 
-kNN is very sensitive to differences in the value range of predictor variables. This is because predictors with a wider range of values (e.g. *Price*) would diminish the influence of variables with significantly narrower range (e.g. *Education*). 
+kNN is very sensitive to differences in the value range of predictor variables. This is because predictors with a wider value range (e.g. *Price*) would diminish the influence of variables with significantly narrower range (e.g. *Education*). 
 
 Let's check our variables and their value ranges.
 
@@ -88,7 +92,7 @@ $$Z = \frac{X - mean(X)}{SD(X)}$$
 
 $$Z = \frac{X - median(X)}{IQR(X)}$$
 \begin{itemize}
-  \item[] , where $IQR(X) = Q3(X) - Q1(x)$.
+  \item[] , where $IQR(X) = Q3(X) - Q1(X)$.
 \end{itemize}
 
 Normalization should be avoided if (numerical) variables have outliers; standardization should be used instead. In the absence of outliers, either of the two can be used.
@@ -97,31 +101,29 @@ Let's check the presence of outliers in the *CompPrice* variable.
 
 ```{r}
 # plot the boxplot for the CompPrice variable
-boxplot(Carseats[,1])
+boxplot(Carseats$CompPrice)
 
 # print the number of outliers in the CompPrice variable
-length(boxplot.stats(Carseats[,1])$out)
+length(boxplot.stats(Carseats$CompPrice)$out)
 ```
 
 Let's do the same for all numeric variables.
 
 ```{r}
-# filter all numerica variables
+# select numeric variables
 numeric.vars <- c(1:5,7,8) # indices of numeric columns
 
-# apply the function for returning the number of outliers for all numeric variables
+# apply the function that returns the number of outliers to each numeric column
 apply(X = Carseats[,numeric.vars], # select numeric columns
       MARGIN = 2, # apply the function to columns
-      FUN = function(x) {
-        length(boxplot.stats(x)$out)
-      }) # the function to be applied to each column
+      FUN = function(x) length(boxplot.stats(x)$out)) # the function to be applied to each column 
 ```
 
-Only 2 variables (*CompPrice*, *Price*) have just a few outliers. Hence, either of the scaling methods can be used.
+Two variables (*CompPrice*, *Price*) have a few outliers. Hence, it is better to use standardization to rescale the variables.
 
-We will rescale our numerical variables by standardizing them (typical approach). To determine how to standardize the variables, we need to check their distribution (if they follow Normal distribution or not). 
+To determine how to standardize numeric variables, we need to check their distribution, that is, if they follow Normal distribution or not. 
 
-We will use *Shapiro-Wilk test* to check for normality. The *null hypothesis* of this test is that a sample comes from a normally distributed population; if the test is not significant (p>0.05), we can assume that the null hypothesis holds.
+We will use *Shapiro-Wilk test* to check for normality. The *null hypothesis* of this test is that a sample comes from a normally distributed population; if the test is not significant (p>0.05), we can assume that the null hypothesis holds and the variable is normally distributed.
 
 ```{r}
 # apply the Shapiro-Wilk test to each numerical column (variable)
@@ -130,7 +132,7 @@ apply(X = Carseats[,numeric.vars],
       FUN = shapiro.test)
 ```
 
-Only *CompPrice* and *Price* are normally distributed. So, we will standardize *Price* and *CompPrice* using mean and SD, and for other variables, we'll use median and IQR. 
+Only *CompPrice* and *Price* are normally distributed. So, we will standardize *Price* and *CompPrice* using mean and SD, and for the other variables, we'll use median and IQR. 
 
 To do the scaling, we will use the *scale* function (from the base package).
 
@@ -148,9 +150,7 @@ carseats.st <- Carseats[, c(2,3,4,7,8)]
 # apply the scalling function to each column
 carseats.st <- apply(X = carseats.st, 
                      MARGIN = 2,
-                     FUN = function(x){
-                       scale(x, center = median(x), scale = IQR(x))
-                     })
+                     FUN = function(x) scale(x, center = median(x), scale = IQR(x)))
 
 # since apply() f. returns a list, convert it to a data frame
 carseats.st <- as.data.frame(carseats.st)
@@ -182,7 +182,8 @@ carseats.st$Urban <- as.integer(Carseats$Urban)
 carseats.st$US <- as.integer(Carseats$US)
 ```
 
-It is often considered more correct to first encode categorical variables as binary dummy variables, and then transform the resulting binary variables into numerical ones. However, for simplicity reasons, and since our categorical variable - *ShelveLoc* - is ordered, we will directly transform it into a numerical variable. 
+We have one categorical (non-binary) variable: *ShelveLoc*. Since this variable is ordered (with levels "Bad", "Medium", "Good"),
+transformation to numerical values is acceptable. 
 
 First, let's check the order of *ShelveLoc* levels.
 ```{r}
@@ -205,9 +206,11 @@ Now, we can transform the *ShelveLoc* into a numerical variable.
 carseats.st$ShelveLoc <- as.integer(Carseats$ShelveLoc)
 ```
 
-**TASK**: Try to create dummy variables for *ShelveLoc* and build a model with these new variables; [this page](http://topepo.github.io/caret/pre-processing.html#dummy) shows how to create dummy variables using the *caret* package.
+**TASK**: It is often considered more correct to first encode categorical variables as binary dummy variables, and then transform the resulting binary variables into numerical ones. However, for simplicity reasons, we applied direct transformation.
+Try to create dummy variables for *ShelveLoc* and build a model with these new variables; [this page](http://topepo.github.io/caret/pre-processing.html#dummy) shows how to create dummy variables using the *caret* package.
 
-Finally, add the outcome (class) variable.
+
+Finally, add the outcome (class) variable to the transformed dataset.
 
 ```{r}
 # add the outcome variable HighSales
@@ -217,12 +220,12 @@ carseats.st$HighSales <- Carseats$HighSales
 Examine the transformed data set.
 
 ```{r}
-# print the structure of the data frame
+# examine the structure of the transformed dataset
 str(carseats.st)
 ```
 
 ```{r}
-# print the summary of the data frame
+# examine the summary of the transformed dataset
 summary(carseats.st)
 ```
 
@@ -242,7 +245,7 @@ We'll take 80% of observations for the training set and the rest for the test se
 
 ```{r}
 # set seed
-set.seed(1010)
+set.seed(10320)
 
 # create train and test sets
 train.indices <- createDataPartition(carseats.st$HighSales, p = 0.8, list = FALSE)
@@ -266,7 +269,7 @@ As the knn() function description indicates, we need to provide the function wit
 * training data without the class variable,
 * test data without the class variable,
 * class values for the training set,
-* a number of neighbors to consider.
+* the number of neighbors to consider.
 
 ```{r}
 # create a knn model with k=5
@@ -291,10 +294,11 @@ knn.cm <- table(true = test.data$HighSales, predicted = knn.pred)
 knn.cm
 ```
 
-We'll use the function for computing the evaluation metrics.
+We'll use the function for computing the evaluation metrics. 
+Recall (from the previous Lab) that we set No as the positive class.
 
 ```{r}
-# function for computing evaluation metrix
+# function for computing evaluation metrics
 compute.eval.metrics <- function(cmatrix) {
   TP <- cmatrix[1,1] # true positive
   TN <- cmatrix[2,2] # true negative
@@ -316,7 +320,7 @@ knn.eval <- compute.eval.metrics(knn.cm)
 knn.eval
 ```
 
-Not bad, but we might be able to do better by choosing another value for k.
+Not bad, but we might be able to do better by choosing value for k in a more systematic way.
 
 We made a guess about the number of neighbors, and might not have made the best guess. Instead of guessing, we'll cross-validate models with several different values for k, and see which one gives the best performance; then, we'll use the test set to evaluate the model that proves to be the best on cross-validation.
 
@@ -332,7 +336,7 @@ library(e1071)
 numFolds = trainControl( method = "cv", number = 10)
 ```
 
-Then, define the range of *k* values to examine in the cross-validation; we'll take odd numbers between 3 and 25. Recall that in case of binary classification, it is recommended to choose an odd number for *k*.
+Then, define the range of *k* values to examine in the cross-validation. We'll take odd numbers between 3 and 25. Recall that in case of binary classification, it is recommended to choose an odd number for *k* - this is to avoid ties when deciding on the majority class.
 
 ```{r}
 # define the range for the k values to examine in the cross-validation
@@ -343,11 +347,11 @@ Now, train the model through cross-validation.
 
 ```{r}
 # since cross-validation is a probabilistic process, it is advisable to set the seed so that we can replicate the results
-set.seed(1010)
+set.seed(10320)
 
 # run the cross-validation
-knn.cv <- train(HighSales ~ ., 
-                data = train.data,
+knn.cv <- train(x = train.data[,-11],
+                y = train.data$HighSales,
                 method = "knn", 
                 trControl = numFolds,
                 tuneGrid = cpGrid)
@@ -361,14 +365,15 @@ We can get a better insight into the cross-validation results by plotting them.
 plot(knn.cv)
 ```
 
-k=9 proved to be the best value. Let's build a model with that value for k.
+k=`r knn.cv$bestTune$k` proved to be the best value. Let's build a model with that value for k.
 
 ```{r}
-# build a new model with k=9
+# build a new model with the best value for k
+best_k <- knn.cv$bestTune$k
 knn.pred2 <- knn(train = train.data[,-11],
                   test = test.data[,-11],
                   cl = train.data$HighSales,
-                  k = 9)
+                  k = best_k)
 ```
 
 Create the confusion matrix for the new predictions.
@@ -390,10 +395,10 @@ knn.eval2
 This model seems to be better than the previous one, but let's compare the metrics of the two models to check how the new model fares
 ```{r}
 # compare the evaluation metrics for knn1 and knn2 models
-data.frame(rbind(knn.eval, knn.eval2), row.names = c("knn 1", "knn 2"))
+data.frame(rbind(knn.eval, knn.eval2), row.names = c("knn_1", "knn_2"))
 ```
 
-The first model (*knn1*) is better in term of precision, but weaker with respect to recall.
+The second model (*knn_2*) is better with respect to all metrics.
 
 **TASK** Create a new model by taking only a subset of variables, for example, those that proved relevant in the DT model and compare the performance with the previously built models.
 

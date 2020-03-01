@@ -14,6 +14,7 @@
 # create a new variable HighSales based on the value of the 3rd quartile
 
 
+
 # convert HighSales from character to factor
 
 
@@ -30,13 +31,13 @@
 # plot the boxplot for the CompPrice variable
 
 
-# print the number of outliers in the CompPrice variable
+# get the number of outliers in the CompPrice variable
 
 
-# filter all numerica variables
+# select numeric variables
 
 
-# apply the function for returning the number of outliers for all numeric variables
+# apply the function that returns the number of outliers to each numeric column
 
 
 # apply the test to each numerical column (variable)
@@ -70,7 +71,7 @@
 # transform the US variable to integer
 
 
-# print the levels of the ShelveLoc variable
+# examine the levels of the ShelveLoc variable
 
 
 # update the order of levels for the ShelveLoc variable to: "Bad", "Medium", "Good"
@@ -79,13 +80,13 @@
 # convert ShelveLoc into a numeric variable
 
 
-# add the outcome variable HighSales
+# add the outcome variable HighSales to the transformed dataset
 
 
-# print the structure of the data frame
+# examine the structure of the transformed dataset.
 
 
-# print the summary of the data frame
+# exaine the summary of the data frame
 
 
 ##################################
@@ -117,21 +118,15 @@
 # create the confusion matrix
 
 
-# function for computing evaluation metrix
-compute.eval.metrics <- function(cmatrix) {
-  TP <- cmatrix[1,1] # true positive
-  TN <- cmatrix[2,2] # true negative
-  FP <- cmatrix[2,1] # false positive
-  FN <- cmatrix[1,2] # false negative
-  acc = sum(diag(cmatrix)) / sum(cmatrix)
-  precision <- TP / (TP + FP)
-  recall <- TP / (TP + FN)
-  F1 <- 2*precision*recall / (precision + recall)
-  c(accuracy = acc, precision = precision, recall = recall, F1 = F1)
-}
+# function for computing evaluation metrics
+
 
 # compute the evaluation metrics
 
+
+#
+# Find the optimal value for *k* through 10-fold cross-validation
+#
 
 # load e1071 library
 
@@ -151,7 +146,7 @@ compute.eval.metrics <- function(cmatrix) {
 # plot the cross-validation results
 
 
-# build a new model with k=9
+# build a new model with the best value for k
 
 
 # create the confusion matrix
@@ -161,4 +156,5 @@ compute.eval.metrics <- function(cmatrix) {
 
 
 # compare the evaluation metrics for knn1 and knn2 models
+
 
