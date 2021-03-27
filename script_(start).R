@@ -1,21 +1,20 @@
-##########################
+#############################
 # K Nearest Neighbours (KNN)
-##########################
-  
+#############################
+
 # load ISLR package
 
 
-# print dataset structure
+# recall the Boston dataset structure
 
 
-# calculate 3rd quartile
+# calculate 3rd quartile for the Sales variable
 
 
-# create a new variable HighSales based on the value of the 3rd quartile
+# create a new variable HighSales
 
 
-
-# convert HighSales from character to factor
+# convert HighSales to factor
 
 
 # remove the Sales variable
@@ -28,10 +27,9 @@
 # print the summary of the dataset
 
 
-# plot the boxplot for the CompPrice variable
-
-
-# get the number of outliers in the CompPrice variable
+# check for outliers 
+# - plot the boxplot for the CompPrice variable
+# - get the number of outliers in the CompPrice variable
 
 
 # select numeric variables
@@ -40,16 +38,16 @@
 # apply the function that returns the number of outliers to each numeric column
 
 
-# apply the test to each numerical column (variable)
+# check for each numerical variable if it is normally distributed (using the Shapiro-Wilk test)
 
 
-# get the documentation for the scale function
+# use the scale function to standardise numerical variables
 
 
 # select not-normally distributed numerical columns (variables)
 
 
-# apply the scalling function to each column
+# apply the scale function to each column
 
 
 # since apply() f. returns a list, convert it to a data frame
@@ -80,13 +78,13 @@
 # convert ShelveLoc into a numeric variable
 
 
-# add the outcome variable HighSales to the transformed dataset
+# add the outcome variable HighSales to the transformed data set
 
 
-# examine the structure of the transformed dataset.
+# examine the structure of the transformed data set
 
 
-# exaine the summary of the data frame
+# examine the summary of the transformed data set
 
 
 ##################################
@@ -96,10 +94,7 @@
 # load the caret package
 
 
-# set seed
-
-
-# create train and test sets
+# set seed and create train and test sets
 
 
 ###################
@@ -109,7 +104,7 @@
 # load the class package
 
 
-# createa a knn model with k=5
+# create a knn model with k=5
 
 
 # print several predictions
@@ -137,7 +132,8 @@
 # define the range for the k values to examine in the cross-validation
 
 
-# since cross-validation is a probabilistic process, it is advisable to set the seed so that we can replicate the results
+# since cross-validation is a probabilistic process, 
+# it is advisable to set the seed so that we can replicate the results
 
 
 # run the cross-validation
