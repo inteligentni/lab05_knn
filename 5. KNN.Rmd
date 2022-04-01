@@ -1,8 +1,8 @@
 ---
 title: "K Nearest Neighbours (KNN)"
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
 urlcolor: blue
 ---
 
@@ -404,5 +404,6 @@ The second model (*knn_2*) is better with respect to all metrics.
 
 Potentially useful articles:
 
+* [An excellent article on how the selection of *k* affects the model's complexity and ability to generalise](https://cambridgecoding.wordpress.com/2016/03/24/misleading-modelling-overfitting-cross-validation-and-the-bias-variance-trade-off/)
 * [kNN Using caret R package](http://rpubs.com/njvijay/16444)
 * [Knn classifier implementation in R with caret package](http://dataaspirant.com/2017/01/09/knn-implementation-r-using-caret-package/)

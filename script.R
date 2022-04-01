@@ -43,7 +43,7 @@ apply(X = Carseats[,numeric.vars], # select numeric columns
       MARGIN = 2, # apply the function to columns
       FUN = function(x) length(boxplot.stats(x)$out)) # the function to be applied to each column
 
-# apply the test to each numerical column (variable)
+# apply the Shapiro-Wilk test to each numerical column (variable)
 apply(X = Carseats[,numeric.vars], 
       MARGIN = 2, 
       FUN = shapiro.test)
