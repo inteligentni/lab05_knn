@@ -5,7 +5,7 @@
 # load ISLR package
 
 
-# recall the Boston dataset structure
+# recall the Carseats dataset structure
 
 
 # calculate 3rd quartile for the Sales variable
@@ -104,7 +104,7 @@
 # load the class package
 
 
-# create a knn model with k=5
+# create a knn model with a randomly chosen k
 
 
 # print several predictions
